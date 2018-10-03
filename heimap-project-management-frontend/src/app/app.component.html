@@ -1,10 +1,18 @@
-<button type="button" [disabled]="boolNewProject()" class="btn btn-primary" style="margin-left:20px;margin-top:20px" (click)="boolNewProjectToggle();">Start A New HeiMAP Project</button>
-<button type="button" [disabled]="boolNewProject()" class="btn btn-primary" style="float:right;margin-right:20px;margin-top:20px">Sign Up</button>
-<br>
-<button type="button" [disabled]="boolNewProject()" class="btn btn-success" style="float:right;margin-right:20px;margin-top:20px">Log In</button>
+<!-- Project Action  -->
+<button type="button" [disabled]="boolNew()" class="btn btn-primary" [ngClass]="(removeButton())?'button-remove':'button-regain'" style="margin-left:20px;margin-top:20px" (click)="boolNewProjectToggle(); boolNewToggle()">Start A New HeiMAP Project</button>
 
+<!-- User Interaction  -->
+<button type="button" [disabled]="boolNew()" class="btn btn-primary" [ngClass]="(removeButton())?'button-remove':'button-regain'" style="float:right;margin-right:20px;margin-top:20px" (click)="boolNewUserToggle(); ; boolNewToggle()">Sign Up To HeiMAP</button>
+<br>
+<button type="button" [disabled]="boolNew()" class="btn btn-success" [ngClass]="(removeButton())?'button-remove':'button-regain'" style="float:right;margin-right:20px;margin-top:20px" (click)="boolLoginToggle(); ; boolNewToggle();">Log In</button>
+<br>
+<button type="button" class="btn btn-danger" [ngClass]="(removeLogout())?'button-remove':'button-regain'" style="float:right;margin-right:20px;margin-top:-40px" (click)="logOut();  boolNewToggle();">Log Out</button>
+<br>
+
+
+<!-- New Project  -->
 <div *ngIf="boolNewProject()" style="margin-top:30px; margin-left:50px">
-  <h1 style="font-family:Garamond">Create A New HeiMAP Project   :-)</h1>
+  <h1 style="font-family:Garamond">Create A New HeiMAP Project :-)</h1>
   <br>
   <div class="required">
     <label>Username: </label>
@@ -38,8 +46,74 @@
   <br>
   <button type="button" class="btn btn-info" [disabled]="boolSubmitProject()" (click)="createNewProject(); successProjectCreate();">Submit</button>
   &nbsp;
-  <button type="button" class="btn btn-danger" (click)="boolNewProjectToggle();">Cancel</button>
+  <button type="button" class="btn btn-danger" (click)="boolNewProjectToggle(); boolNewToggle();">Cancel</button>
 </div>
 
+<!-- New User  -->
+<div *ngIf="boolNewUser()" style="float:right">
+  <h1 style="font-family:Garamond">Create A New HeiMAP User :-P</h1>
+  <br>
+  <div class="">
+    <label>First Name: </label>
+    <input type="text" size="20" placeholder="John">
+  </div>
+  <br>
+  <div class="">
+    <label>Last Name: </label>
+    <input type="text" size="20" placeholder="Webb">
+  </div>
+  <br>
+  <div class="required">
+    <label>Email: </label>
+    <input type="text" size="35" [(ngModel)]="email" (keyup)="emailInput($event)" class="input-success" placeholder="johnwebb@uni-heidelberg.de">
+  </div>
+  <br>
+  <div class="required">
+    <label>Username: </label>
+    <input type="text" size="20" [(ngModel)]="new_username" (keyup)="newUsernameInput($event)" class="input-error" placeholder="username123">
+  </div>
+  <br>
+  <div class="">
+    <label>Organisation: </label>
+    <input type="text" size="50" placeholder="University of Heidelberg">
+  </div>
+  <br>
+  <div class="">
+    <label>About: </label>
+    <input type="text" size="100" placeholder="I am a Historian.">
+  </div>
+  <br>
+  <button type="button" class="btn btn-info" [disabled]="boolSubmitUser()" (click)="createNewUser(); successUserCreate();">Create</button>
+  &nbsp;
+  <button type="button" class="btn btn-danger" (click)="boolNewUserToggle(); boolNewToggle();">Cancel</button>
+</div>
 
+<!-- Login  -->
+<div *ngIf="boolNewLogin()" style="float:right">
+  <h1 style="font-family:Garamond">Log In :-D</h1>
+  <br>
+  <div class="required">
+    <label>Username: </label>
+    <input type="text" size="35" placeholder="username123">
+  </div>
+  <br>
+  <div class="required">
+    <label>Password: </label>
+    <input type="password" size="20" placeholder="">
+  </div>
+  <br>
+  <div class="">
+    <label>Email (if forget password): </label>
+    <input type="password" size="35" placeholder="johnwebb@uni-heidelberg.de">
+  </div>
+  <br>
+  <button type="button" class="btn btn-info" [disabled]="boolLoginUser()" (click)="newLogin(); boolLoginToggle();">Log In</button>
+  &nbsp;
+  <button type="button" class="btn btn-warning" [disabled]="boolSubmitPasswordRecovery()" (click)="recoverPass();  boolLoginToggle(); boolNewToggle(); passwordRecoverySuccess();">Forget Password</button>
+  &nbsp;
+  <button type="button" class="btn btn-danger" (click)="boolLoginToggle(); boolNewToggle();">Cancel</button>
+</div>
 
+<!-- List User Details -->
+<div *ngIf="boolDetails()" style="margin-top:30px; margin-left:50px">fdd
+</div>

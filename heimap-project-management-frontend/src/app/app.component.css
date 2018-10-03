@@ -12,3 +12,10 @@
     outline: 0 none;
 }
 
+.button-remove {
+    visibility: hidden
+}
+
+.button-regain {
+    visibility: visible
+}   
