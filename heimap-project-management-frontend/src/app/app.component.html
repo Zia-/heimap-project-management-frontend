@@ -4,16 +4,16 @@
 <button type="button" [disabled]="boolNewProject()" class="btn btn-success" style="float:right;margin-right:20px;margin-top:20px">Log In</button>
 
 <div *ngIf="boolNewProject()" style="margin-top:30px; margin-left:50px">
-  <h1 style="font-family:Garamond">Create New HeiMAP Project :-)</h1>
+  <h1 style="font-family:Garamond">Create A New HeiMAP Project   :-)</h1>
   <br>
   <div class="required">
     <label>Username: </label>
-    <input type="text" placeholder="username">
+    <input type="text" [(ngModel)]="username" (keyup)="usernameInput($event)" class="input-error" placeholder="username">
   </div>
   <br>
   <div class="required">
     <label>Authorization Key: </label>
-    <input type="text" placeholder="ADdfascwd12rsfDSA">
+    <input type="text" [(ngModel)]="auth_key" (keyup)="authKeyInput($event)" class="input-error" placeholder="ADdfascwd12rsfDSA">
   </div>
   <br>
   <div class="required">
@@ -36,7 +36,10 @@
     <input type="text" size="100" placeholder="">
   </div>
   <br>
-  <button type="button" class="btn btn-info">Submit</button>
+  <button type="button" class="btn btn-info" [disabled]="boolSubmitProject()" (click)="createNewProject(); successProjectCreate();">Submit</button>
   &nbsp;
   <button type="button" class="btn btn-danger" (click)="boolNewProjectToggle();">Cancel</button>
 </div>
+
+
+
