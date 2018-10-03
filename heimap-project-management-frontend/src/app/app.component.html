@@ -1,0 +1,42 @@
+<button type="button" [disabled]="boolNewProject()" class="btn btn-primary" style="margin-left:20px;margin-top:20px" (click)="boolNewProjectToggle();">Start A New HeiMAP Project</button>
+<button type="button" [disabled]="boolNewProject()" class="btn btn-primary" style="float:right;margin-right:20px;margin-top:20px">Sign Up</button>
+<br>
+<button type="button" [disabled]="boolNewProject()" class="btn btn-success" style="float:right;margin-right:20px;margin-top:20px">Log In</button>
+
+<div *ngIf="boolNewProject()" style="margin-top:30px; margin-left:50px">
+  <h1 style="font-family:Garamond">Create New HeiMAP Project :-)</h1>
+  <br>
+  <div class="required">
+    <label>Username: </label>
+    <input type="text" placeholder="username">
+  </div>
+  <br>
+  <div class="required">
+    <label>Authorization Key: </label>
+    <input type="text" placeholder="ADdfascwd12rsfDSA">
+  </div>
+  <br>
+  <div class="required">
+    <label>Project Name: </label>
+    <input type="text" size="35" placeholder="History of Germany">
+  </div>
+  <br>
+  <div class="">
+    <label>Organization: </label>
+    <input type="text" size="35" placeholder="University of Heidelberg">
+  </div>
+  <br>
+  <div class="">
+    <label>Funder: </label>
+    <input type="text" size="35" placeholder="DAAD">
+  </div>
+  <br>
+  <div class="">
+    <label>Description: </label>
+    <input type="text" size="100" placeholder="">
+  </div>
+  <br>
+  <button type="button" class="btn btn-info">Submit</button>
+  &nbsp;
+  <button type="button" class="btn btn-danger" (click)="boolNewProjectToggle();">Cancel</button>
+</div>
