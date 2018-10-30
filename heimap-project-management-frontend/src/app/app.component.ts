@@ -12,6 +12,7 @@ import { DialogComponent, DialogService } from "ng2-bootstrap-modal";
 export class AppComponent {
   
   // @Input() input_username: String;
+  backend_api: String = "http://129.206.7.141:8080";
   username: String = "";
   new_username: String = "";
   auth_key: String = "";
@@ -95,7 +96,7 @@ export class AppComponent {
 
   usernameInput = function(event: any){
     // SQL Check if username exists        
-    this.http.get('http://129.206.7.141:8080/get/username/availability?username='+this.username)
+    this.http.get(this.backend_api+'/get/username/availability?username='+this.username)
       .toPromise()
       .then(function (response){
         if(response["_body"] == "true"){
