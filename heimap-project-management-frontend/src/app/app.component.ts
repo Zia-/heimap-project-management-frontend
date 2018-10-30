@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import {Headers, Http} from '@angular/http';
 
 import { Router, Data } from '@angular/router';
 import { DialogComponent, DialogService } from "ng2-bootstrap-modal";
@@ -30,6 +31,10 @@ export class AppComponent {
   if_new_login: Boolean = false; // Default false
   if_logout: Boolean = false; // Default false
   if_details: Boolean = false; // Default false
+
+  constructor(private http: Http) {
+
+  }
 
   boolNew = function(){
     return this.if_new;
@@ -75,16 +80,34 @@ export class AppComponent {
     this.router.navigateByUrl('/user');
   };
 
+  // sqlCheck = function(type: string, query: string, params: Array<string>){
+  //   return this.http.get('http://129.206.7.141:8080/get/username/availability?username=zz').toPromise()
+  //   .then(function (response){
+  //     console.log(response);
+  //     // response => response.json()
+  //   }
+  //     // response => response.json()
+  //     // console.log(response);
+  //   );
+  //   // .map(response => response.json());
+    
+  // }
+
   usernameInput = function(event: any){
-    // SQL Check if username exists
-    ////////////////////
-    if(event.target.classList.contains('input-error')){
-      event.target.classList.remove('input-error');
-      event.target.classList.add('input-success');
-    } else if (event.target.classList.contains('input-success')){
-      event.target.classList.remove('input-success');
-      event.target.classList.add('input-error');
-    }
+    // SQL Check if username exists        
+    this.http.get('http://129.206.7.141:8080/get/username/availability?username='+this.username)
+      .toPromise()
+      .then(function (response){
+        if(response["_body"] == "true"){
+          event.target.classList.remove('input-error');
+          event.target.classList.add('input-success');
+        } else if (response["_body"] == "false"){
+          event.target.classList.remove('input-success');
+          event.target.classList.add('input-error');
+        }
+      }
+    );
+        
   }
 
   authKeyInput = function(event: any){
@@ -189,11 +212,12 @@ export class AppComponent {
       this.remove_button = !this.remove_button;
       this.if_logout = !this.if_logout;
       this.boolDetailsToggle();
-    } else {
-      alert("Login Error! :-(");
-      this.boolNewToggle();
-      this.boolLoginToggle();
     }
+    // } else {
+    //   alert("Login Error! :-(");
+    //   this.boolNewToggle();
+    //   this.boolLoginToggle();
+    // }
   }
 
   removeLogout = function(){
@@ -215,7 +239,7 @@ export class AppComponent {
   }
 
   recoverPass = function(){
-
+//
   }
 
   passwordRecoverySuccess = function(){
