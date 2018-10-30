@@ -7,6 +7,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 
+import { HttpModule } from '@angular/http';
+
 const appRoutes: Routes = [
   // { path: '', component: DomComponent},
   { path: 'project/', component: NewProjectComponent},
@@ -19,6 +21,7 @@ const appRoutes: Routes = [
   ],
   imports: [
     BrowserModule,
+    HttpModule,
     RouterModule.forRoot(appRoutes),
     FormsModule,
     BootstrapModalModule
