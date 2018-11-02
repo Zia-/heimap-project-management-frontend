@@ -1,8 +1,15 @@
 import { Component, Input } from '@angular/core';
-import {Headers, Http} from '@angular/http';
+import {Headers,  Http, RequestOptions} from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 import { Router, Data } from '@angular/router';
 import { DialogComponent, DialogService } from "ng2-bootstrap-modal";
+import { areAllEquivalent } from '@angular/compiler/src/output/output_ast';
+import { findSafariExecutable } from 'selenium-webdriver/safari';
+import { map, filter, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+// import 'rxjs/Rx';
+
 
 @Component({
   selector: 'app-root',
@@ -13,17 +20,27 @@ export class AppComponent {
   
   // @Input() input_username: String;
   backend_api: String = "http://129.206.7.141:8080";
+  // backend_api: String = "http://localhost:8080";
+  drupal_api: String = "http://localhost:8080";
   username: String = "";
   new_username: String = "";
+  new_password: String = "";
+  new_re_password: String = "";
   auth_key: String = "";
   proj_name: String = "";
   organization: String = "";
   funder: String = "";
   description: String = "";
   email: String = "";
+  firstname: String = "";
+  lastname: String = "";
+  user_organisation: String = "";
+  user_about: String = "";
   remove_button: Boolean = false;
   auth_key_validity: Boolean = false;
   create_user_validity: Boolean = false;
+  email_email_validity: Boolean = false;
+  email_username_validity: Boolean = false;
   create_email_validity: Boolean = false;
   login_user_validity: Boolean = false;
   if_new: Boolean = false; // Default false
@@ -94,62 +111,170 @@ export class AppComponent {
     
   // }
 
+  promiseUserName = function (){
+    return this.http.get(this.backend_api+'/get/username/availability?username='+this.username)
+  }
+
+  setUserName = function (data: any, event: any){
+    if (data["_body"] == "true"){
+      this.auth_key_validity = false;
+      event.target.classList.remove('input-success');
+      event.target.classList.add('input-error');
+    } else {
+      this.auth_key_validity = true;
+      event.target.classList.remove('input-error');
+      event.target.classList.add('input-success');
+    }
+  }
+
+  rejectUserName = function (err: any, event: any){
+    if (err["_body"] == "USER AVAILABILITY FAILED"){
+      this.auth_key_validity = true;
+      event.target.classList.remove('input-error');
+      event.target.classList.add('input-success');
+    } else {
+      this.auth_key_validity = false;
+      event.target.classList.remove('input-success');
+      event.target.classList.add('input-error');
+    }
+  }
+
   usernameInput = function(event: any){
-    // SQL Check if username exists        
-    this.http.get(this.backend_api+'/get/username/availability?username='+this.username)
-      .toPromise()
-      .then(function (response){
-        if(response["_body"] == "true"){
-          event.target.classList.remove('input-error');
-          event.target.classList.add('input-success');
-        } else if (response["_body"] == "false"){
-          event.target.classList.remove('input-success');
-          event.target.classList.add('input-error');
-        }
-      }
-    );
-        
+    // SQL Check if username exists    
+    this.promiseUserName().subscribe(
+      data => this.setUserName(data, event),
+      err => this.rejectUserName(err, event)
+    )    
+  }
+
+  promiseAuthKey = function (){
+    return this.http.get(this.backend_api+'/get/authkey/availability?username='+this.username+'&authkey='+this.auth_key)
+  }
+
+  setAuthKey = function (data: any, event: any){
+    if (data["_body"] == "true"){
+      this.auth_key_validity = true;
+      event.target.classList.remove('input-error');
+      event.target.classList.add('input-success');
+    } else {
+      this.auth_key_validity = false;
+      event.target.classList.remove('input-success');
+      event.target.classList.add('input-error');
+    }
+  }
+
+  rejectAuthKey = function (err: any, event: any){
+    if (err["_body"] == "AUTHORISATION KEY AVAILABILITY FAILED"){
+      this.auth_key_validity = false;
+      event.target.classList.remove('input-success');
+      event.target.classList.add('input-error');
+    } else {
+      this.auth_key_validity = true;
+      event.target.classList.remove('input-error');
+      event.target.classList.add('input-success');
+    }
   }
 
   authKeyInput = function(event: any){
     // SQL Check if auth_key for corresponding username valid
+    this.promiseAuthKey().subscribe(
+      data => this.setAuthKey(data, event),
+      err => this.rejectAuthKey(err, event)
+    )
     // this.auth_key_validity = true; // Make it true if everything is ok and valid for auth_key and username
     ////////////////////
-    if(event.target.classList.contains('input-error')){
+  }
+
+  promiseNewUserName = function (){
+    return this.http.get(this.backend_api+'/get/username/availability?username='+this.new_username)
+  }
+
+  setNewUserName = function (data: any, event: any){
+    if (data["_body"] == "true"){
+      this.email_username_validity = true;
       event.target.classList.remove('input-error');
       event.target.classList.add('input-success');
-    } else if (event.target.classList.contains('input-success')){
+    } else {
+      this.email_username_validity = false;
       event.target.classList.remove('input-success');
       event.target.classList.add('input-error');
+    }
+  }
+
+  rejectNewUserName = function (err: any, event: any){
+    if (err["_body"] == "USER AVAILABILITY FAILED"){
+      this.email_username_validity = false;
+      event.target.classList.remove('input-success');
+      event.target.classList.add('input-error');
+    } else {
+      this.email_username_validity = true;
+      event.target.classList.remove('input-error');
+      event.target.classList.add('input-success');
     }
   }
 
   newUsernameInput = function(event: any){
     // SQL Check if username exists. Also set "create_user_validity" (includes both username and password) 
+    this.promiseNewUserName().subscribe(
+      data => this.setNewUserName(data, event),
+      err => this.rejectNewUserName(err, event)
+    ) 
     ////////////////////
-    if(event.target.classList.contains('input-error')){
+    // if(event.target.classList.contains('input-error')){
+    //   event.target.classList.remove('input-error');
+    //   event.target.classList.add('input-success');
+    // } else if (event.target.classList.contains('input-success')){
+    //   event.target.classList.remove('input-success');
+    //   event.target.classList.add('input-error');
+    // }
+  }
+
+  promiseEmailInput = function (){
+    return this.http.get(this.backend_api+'/get/emailid/availability?emailid='+this.email)
+  }
+
+  setEmail = function (data: any, event: any){
+    if (data["_body"] == "true"){
+      this.email_email_validity = true;
       event.target.classList.remove('input-error');
       event.target.classList.add('input-success');
-    } else if (event.target.classList.contains('input-success')){
+    } else {
+      this.email_email_validity = false;
       event.target.classList.remove('input-success');
       event.target.classList.add('input-error');
+    }
+  }
+
+  rejectEmail = function (err: any, event: any){
+    if (err["_body"] == "EMAIL ID AVAILABILITY FAILED"){
+      this.email_email_validity = false;
+      event.target.classList.remove('input-success');
+      event.target.classList.add('input-error');
+    } else {
+      this.email_email_validity = true;
+      event.target.classList.remove('input-error');
+      event.target.classList.add('input-success');
     }
   }
 
   emailInput = function(event: any){
     // SQL Check if username exists. Also set "create_user_validity" (includes both username and password) and "create_email_validity"
+    this.promiseEmailInput().subscribe(
+      data => this.setEmail(data, event),
+      err => this.rejectEmail(err, event)
+    )  
     ////////////////////
-    if(event.target.classList.contains('input-error')){
-      event.target.classList.remove('input-error');
-      event.target.classList.add('input-success');
-    } else if (event.target.classList.contains('input-success')){
-      event.target.classList.remove('input-success');
-      event.target.classList.add('input-error');
-    }
+    // if(event.target.classList.contains('input-error')){
+    //   event.target.classList.remove('input-error');
+    //   event.target.classList.add('input-success');
+    // } else if (event.target.classList.contains('input-success')){
+    //   event.target.classList.remove('input-success');
+    //   event.target.classList.add('input-error');
+    // }
   }
 
-  boolSubmitProject = function(){    
-    if (this.auth_key_validity && this.proj_name != null){
+  boolSubmitProject = function(event: any){         
+    if (this.auth_key_validity && this.proj_name != ""){
       return false; // Show
     } else{
       return true; // No Show
@@ -158,7 +283,13 @@ export class AppComponent {
 
   boolSubmitUser = function(){
     // return false;
-    if (this.create_user_validity){
+    if (this.email_email_validity 
+      && this.email_username_validity 
+      && this.new_password === this.new_re_password
+      && this.email != ""
+      && this.new_username != ""
+      && this.new_password != ""
+      && this.new_re_password != ""){
       return false; // Show
     } else{
       return true; // No Show
@@ -174,8 +305,41 @@ export class AppComponent {
     }
   }
 
+  publishDrupalProject = function(proj_id: Number){
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
+    this.post_payload = {"action": "createProject", "data": [{"proj_id": proj_id}]};
+    this.http.post(this.drupal_api+'/heimap/vector/project', this.post_payload, options).subscribe(
+      data => console.log(data),
+      err => console.log(err)
+    );
+  }
+
   createNewProject = function(){
     // Create New Project - drupal api and invalidate username and auth_key
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
+    this.post_payload = {"username":this.username,"authkey":parseInt(this.auth_key),"proj_name":this.proj_name,"organisation":this.organization,"funder":this.funder,"description":this.description};
+    this.http.post(this.backend_api+'/post/proj', this.post_payload, options).subscribe(
+      data => this.publishDrupalProject(JSON.parse(data["_body"])[0]['proj_id']),
+      err => console.log(err)
+    );
+
+
+    // this.post_payload1 = {"username":"jj","authkey":"123454","proj_name":"proj 2","organisation":"org 2","funder":"daad","description":"desp 1"};
+    // this.post_payload1 = "faaaa";
+    // this.http.post(this.backend_api+'/post/proj', JSON.stringify(this.post_payload1)).subscribe(
+    //   data => console.log(data),
+    //   err => console.log(err)
+    // );
+
+
+    // this.post_payload = {"action": "createProject", "data": [{"proj_id": "3"}]};
+    // this.http.post(this.drupal_api+'/heimap/vector/project', JSON.stringify(this.post_payload)).subscribe(
+    //   data => console.log(data),
+    //   err => console.log(err)
+    // );
+
     ////////////////////
     this.boolNewToggle();
     this.boolNewProjectToggle();
@@ -187,6 +351,13 @@ export class AppComponent {
 
   createNewUser = function(){
     // Create New User
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
+    this.post_payload = {"first_name":this.firstname,"last_name":this.lastname,"email":this.email,"username":this.new_username,"pass":this.new_password,"organisation":this.user_organisation,"about":this.user_about};
+    this.http.post(this.backend_api+'/post/user', this.post_payload, options).subscribe(
+      data => console.log(data),
+      err => console.log(err)
+    );
     ////////////////////
     this.boolNewToggle();
     this.boolNewUserToggle();

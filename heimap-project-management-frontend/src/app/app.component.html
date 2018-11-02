@@ -26,22 +26,22 @@
   <br>
   <div class="required">
     <label>Project Name: </label>
-    <input type="text" size="35" placeholder="History of Germany">
+    <input type="text" size="35" [(ngModel)]="proj_name" placeholder="History of Germany">
   </div>
   <br>
   <div class="">
     <label>Organization: </label>
-    <input type="text" size="35" placeholder="University of Heidelberg">
+    <input type="text" size="35" [(ngModel)]="organization" placeholder="University of Heidelberg">
   </div>
   <br>
   <div class="">
     <label>Funder: </label>
-    <input type="text" size="35" placeholder="DAAD">
+    <input type="text" size="35" [(ngModel)]="funder" placeholder="DAAD">
   </div>
   <br>
   <div class="">
     <label>Description: </label>
-    <input type="text" size="100" placeholder="">
+    <input type="text" size="100" [(ngModel)]="description" placeholder="">
   </div>
   <br>
   <button type="button" class="btn btn-info" [disabled]="boolSubmitProject()" (click)="createNewProject(); successProjectCreate();">Submit</button>
@@ -55,12 +55,12 @@
   <br>
   <div class="">
     <label>First Name: </label>
-    <input type="text" size="20" placeholder="John">
+    <input type="text" size="20" [(ngModel)]="firstname" placeholder="John">
   </div>
   <br>
   <div class="">
     <label>Last Name: </label>
-    <input type="text" size="20" placeholder="Webb">
+    <input type="text" size="20" [(ngModel)]="lastname" placeholder="Webb">
   </div>
   <br>
   <div class="required">
@@ -72,15 +72,23 @@
     <label>Username: </label>
     <input type="text" size="20" [(ngModel)]="new_username" (keyup)="newUsernameInput($event)" class="input-error" placeholder="username123">
   </div>
+  <div class="required">
+    <label>Password: </label>
+    <input type="password" size="20" [(ngModel)]="new_password">
+  </div>
+  <div class="required">
+    <label>Re-Password: </label>
+    <input type="password" size="20" [(ngModel)]="new_re_password">
+  </div>
   <br>
   <div class="">
     <label>Organisation: </label>
-    <input type="text" size="50" placeholder="University of Heidelberg">
+    <input type="text" size="50" [(ngModel)]="user_organisation" placeholder="University of Heidelberg">
   </div>
   <br>
   <div class="">
     <label>About: </label>
-    <input type="text" size="100" placeholder="I am a Historian.">
+    <input type="text" size="100" [(ngModel)]="user_about" placeholder="I am a Historian.">
   </div>
   <br>
   <button type="button" class="btn btn-info" [disabled]="boolSubmitUser()" (click)="createNewUser(); successUserCreate();">Create</button>
