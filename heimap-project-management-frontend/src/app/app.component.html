@@ -6,7 +6,7 @@
 <br>
 <button type="button" [disabled]="boolNew()" class="btn btn-success" [ngClass]="(removeButton())?'button-remove':'button-regain'" style="float:right;margin-right:20px;margin-top:20px" (click)="boolLoginToggle(); ; boolNewToggle();">Log In</button>
 <br>
-<button type="button" class="btn btn-danger" [ngClass]="(removeLogout())?'button-remove':'button-regain'" style="float:right;margin-right:20px;margin-top:-40px" (click)="logOut();  boolNewToggle();">Log Out</button>
+<button type="button" class="btn btn-danger" [ngClass]="(removeLogout())?'button-remove':'button-regain'" style="float:right;margin-right:20px;margin-top:-40px" (click)="logOut();  boolNewToggle(); clearUsernamePass();">Log Out</button>
 <br>
 
 
@@ -102,17 +102,17 @@
   <br>
   <div class="required">
     <label>Username: </label>
-    <input type="text" size="35" placeholder="username123">
+    <input type="text" size="35" [(ngModel)]="login_username" (keyup)="checkLogin($event)" placeholder="username123">
   </div>
   <br>
   <div class="required">
     <label>Password: </label>
-    <input type="password" size="20" placeholder="">
+    <input type="password" size="20" [(ngModel)]="login_password" (keyup)="checkLogin($event)" placeholder="">
   </div>
   <br>
   <div class="">
-    <label>Email (if forget password): </label>
-    <input type="password" size="35" placeholder="johnwebb@uni-heidelberg.de">
+    <label>Email (if forget password) - Coming Soon!: </label>
+    <input type="password" size="35" placeholder="leopoldvonranke@uni-heidelberg.de">
   </div>
   <br>
   <button type="button" class="btn btn-info" [disabled]="boolLoginUser()" (click)="newLogin(); boolLoginToggle();">Log In</button>
@@ -123,5 +123,76 @@
 </div>
 
 <!-- List User Details -->
-<div *ngIf="boolDetails()" style="margin-top:30px; margin-left:50px">fdd
+<div *ngIf="boolDetails()" style="margin-top:30px; margin-left:50px">
+  <p style="font-size:30px;">Willkommen <span style="color:red;">{{ full_name }}</span> :D</p>
+  
+  <div *ngFor="let proj_single_item of proj_items" style="background-color: #F3FEFF;width:800px;padding:5px;box-shadow: 5px 5px 5px grey;margin-bottom: 30px">
+
+    <!-- <p *ngIf="proj_single_item.proj_role_single == 'superuser'" style="font-size:20px;">
+      <span style="font-weight: bold;">Project Name: </span><span style="color:blue;">{{ proj_single_item.proj_name_single }}</span>
+      <br>
+      <span style="font-weight: bold;"><a href="https://google.com">Go To Maps</a></span>
+      <br>
+      <span style="font-weight: bold;">Role: </span><span style="color:orange;">{{ proj_single_item.proj_role_single }}</span >
+      <br>
+    
+      <div class="required">
+        <label>Invite New Member: </label>
+        <input type="text" size="35" [(ngModel)]="invite_username" (keyup)="checkInviteUsername($event)" placeholder="username">
+        <select>
+          <option value="volvo">Volvo</option>
+          <option value="saab">Saab</option>
+          <option value="opel">Opel</option>
+          <option value="audi">Audi</option>
+        </select>
+      </div>
+
+    </p> -->
+
+    <p style="font-size:20px;">
+      <span style="font-weight: bold;">Project Name: </span><span style="color:blue;">{{ proj_single_item.proj_name_single }}</span>
+      <br>
+      <span style="font-weight: bold;"><a href="https://google.com" target="_blank">Go To Maps</a></span>
+      <br>
+      <span style="font-weight: bold;">Role: </span><span style="color:#FF8C00">{{ proj_single_item.proj_role_single }}</span >
+    </p>
+
+    <div *ngIf="proj_single_item.proj_role_single == 'superuser'">
+      <p style="font-size:20px;font-weight: bold;">Members:</p>
+      <ul>
+        <li *ngFor="let members of proj_single_item.proj_members">
+          {{ members.first_name }} {{ members.last_name }} (username - <span style="color:red;">{{ members.user_name }}</span>) - <span style="color:#FF8C00">{{ members.role_proj }}</span >
+        </li>
+      </ul>
+    </div>
+
+    <div *ngIf="proj_single_item.proj_role_single != 'superuser'">
+      <p style="font-size:20px;font-weight: bold;">Members:</p>
+      <ul>
+        <li *ngFor="let members of proj_single_item.proj_members">
+          {{ members.first_name }} {{ members.last_name }} (username - <span style="color:red;">{{ members.user_name }}</span>) - <span style="color:#FF8C00">{{ members.role_proj }}</span >
+        </li>
+      </ul>
+    </div>
+    
+
+    <div *ngIf="proj_single_item.proj_role_single == 'superuser'"  style="float:left">
+      <h1 style="font-family:Garamond;font-size:20px;">Invite New Members or Revoke Old Members from the <span style="color:blue;">{{ proj_single_item.proj_name_single }}</span> project as you are <span style="color:#FF8C00">Project Admin</span> here:</h1>
+        <label>Username: </label>
+        <input type="text" size="20" [(ngModel)]="invite_username" (keyup)="inviteUsername($event)" placeholder="username">
+        &nbsp;
+        <label for="exampleFormControlSelect1">Assign Role: </label>
+        <select class="form-control" style="width:150px;display: inline" [(ngModel)]="invite_role">
+          <option>Project Admin</option>
+          <option>Project Leader</option>
+          <option>Senior User</option>
+          <option>Guest User</option>
+          <option>Revoke!</option>
+        </select>
+        &nbsp;
+      <button type="button" class="btn btn-success" [disabled]="boolSubmitInvite()" (click)="inviteUser(proj_single_item.proj_id_single)" >Invite</button> 
+    </div>
+    
+  </div>
+  
 </div>

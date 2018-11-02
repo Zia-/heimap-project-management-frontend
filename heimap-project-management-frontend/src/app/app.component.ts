@@ -6,7 +6,7 @@ import { Router, Data } from '@angular/router';
 import { DialogComponent, DialogService } from "ng2-bootstrap-modal";
 import { areAllEquivalent } from '@angular/compiler/src/output/output_ast';
 import { findSafariExecutable } from 'selenium-webdriver/safari';
-import { map, filter, switchMap } from 'rxjs/operators';
+import { map, filter, switchMap, count } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 // import 'rxjs/Rx';
 
@@ -36,6 +36,12 @@ export class AppComponent {
   lastname: String = "";
   user_organisation: String = "";
   user_about: String = "";
+  user_details_array: Array<any> = [];
+  proj_items: Array<any> = [];
+  full_name: String = "";
+  invite_username: String = "";
+  invite_role: String = "";
+  proj_id_array: Array<any> = [];
   remove_button: Boolean = false;
   auth_key_validity: Boolean = false;
   create_user_validity: Boolean = false;
@@ -229,6 +235,62 @@ export class AppComponent {
     // }
   }
 
+  promiseInviteUsername = function (){
+    return this.http.get(this.backend_api+'/get/username/availability?username='+this.invite_username)
+  }
+
+  setInviteUsername = function (data: any, event: any){
+    if (data["_body"] == "true"){
+      event.target.classList.remove('input-success');
+      event.target.classList.add('input-error');
+    } else {
+      event.target.classList.remove('input-error');
+      event.target.classList.add('input-success');
+    }
+  }
+
+  rejectInviteUsername = function (err: any, event: any){
+    if (err["_body"] == "USER AVAILABILITY FAILED"){
+      event.target.classList.remove('input-error');
+      event.target.classList.add('input-success');
+    } else {
+      event.target.classList.remove('input-success');
+      event.target.classList.add('input-error');
+    }
+  }
+
+  inviteUsername = function(event: any){
+    this.promiseInviteUsername().subscribe(
+      data => this.setInviteUsername(data, event),
+      err => this.rejectInviteUsername(err, event)
+    ) 
+  }
+
+  inviteUser = function(proj_id: number){
+    // Invite New Members     
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
+    this.post_payload = {"username":this.invite_username,"role_proj":this.invite_role,"proj_id":proj_id}
+    this.http.post(this.backend_api+'/post/role', this.post_payload, options).subscribe(
+      data => console.log(data),
+      err => console.log(err)
+    );
+
+    this.invite_username = "";
+    this.invite_role = "";
+  }
+
+  boolSubmitInvite = function(){
+    // return false;
+    if (this.invite_username != ""
+        // && this.invite_username_check
+        && this.invite_role != ""){
+      return false; // Show
+    } else{
+      return true; // No Show
+    }
+  }
+
   promiseEmailInput = function (){
     return this.http.get(this.backend_api+'/get/emailid/availability?emailid='+this.email)
   }
@@ -273,8 +335,39 @@ export class AppComponent {
     // }
   }
 
+  promiseLogin = function (){
+    return this.http.get(this.backend_api+'/get/login/check?username='+this.login_username+'&pass='+this.login_password)
+  }
+
+  setLogin = function(data: any){
+    if (data["_body"] == "true"){
+      this.login_user_validity = true;
+    } else {
+      this.login_user_validity = false;
+    }
+  }
+
+  rejectLogin = function (err: any){
+    if (err["_body"] == "LOGIN CHECK FAILED"){
+      this.login_user_validity = false;
+    } else {
+      this.login_user_validity = true;
+    }
+  }
+
+  checkLogin = function(event: any){
+    // SQL Check if username exists. Also set "create_user_validity" (includes both username and password) 
+    this.promiseLogin().subscribe(
+      data => this.setLogin(data),
+      err => this.rejectLogin(err)
+    ) 
+    
+  }
+
   boolSubmitProject = function(event: any){         
-    if (this.auth_key_validity && this.proj_name != ""){
+    if (this.auth_key_validity 
+      && this.proj_name != ""
+      && this.username != ""){
       return false; // Show
     } else{
       return true; // No Show
@@ -364,32 +457,96 @@ export class AppComponent {
   }
 
   boolLoginUser = function(){
-    return false;
-    // if (this.login_user_validity){
-    //   return false; // Show
-    // } else{
-    //   return true; // No Show
-    // }
+    // return false;    
+    if (this.login_user_validity){
+      return false; // Show
+    } else{
+      return true; // No Show
+    }
   }
 
   removeButton = function(){
     return this.remove_button
   }
 
+  promiseGetUserDetails = function (){
+    return this.http.get(this.backend_api+'/get/proj/role?username='+this.login_username)
+  }
+
+  setGetUserDetails = function(data: any){    
+    this.user_details_array = JSON.parse(data["_body"]);
+
+    for (var i=0; i<this.user_details_array.length; i++){      
+      if (this.user_details_array[i]["username"] == this.login_username){        
+        // Set Full Name of Logged In User
+        this.full_name = this.user_details_array[i]["first_name"] + " " + this.user_details_array[i]["last_name"];
+      }
+
+      if (this.proj_id_array.indexOf(this.user_details_array[i]["proj_id"]) < 0){
+        // Make Unique Proj Ids
+        this.proj_id_array.push(this.user_details_array[i]["proj_id"])
+      }
+    }
+
+    this.proj_items = [];
+    for (var i=0; i<this.proj_id_array.length; i++){
+      this.proj_content_single = [];
+      this.proj_members = [];
+      for (var j=0; j<this.user_details_array.length; j++){
+        if (this.proj_id_array[i] == this.user_details_array[j]["proj_id"]){
+          this.proj_id_single = this.proj_id_array[i];
+          this.proj_name_single = this.user_details_array[j]["proj_name"];
+          if (this.user_details_array[j]["username"] == this.login_username){
+            this.proj_role_single = this.user_details_array[j]["role_proj"]
+            // if (this.proj_role_single == "superuser"){
+            //   this.proj_invite = "true";
+            // } else {
+            //   this.proj_invite = "false";
+            // }
+          } else {
+            this.proj_members_single = [];
+            this.proj_members_single["first_name"] = this.user_details_array[j]["first_name"];
+            this.proj_members_single["last_name"] = this.user_details_array[j]["last_name"];
+            this.proj_members_single["role_proj"] = this.user_details_array[j]["role_proj"];
+            this.proj_members_single["user_name"] = this.user_details_array[j]["username"];
+            this.proj_members.push(this.proj_members_single);
+          } 
+        }
+      }
+      this.proj_content_single["proj_id_single"] = this.proj_id_single;
+      this.proj_content_single["proj_name_single"] = this.proj_name_single;
+      this.proj_content_single["proj_role_single"] = this.proj_role_single;
+      // this.proj_content_single["proj_invite"] = this.proj_invite;
+      this.proj_content_single["proj_members"] = this.proj_members;
+      this.proj_items.push(this.proj_content_single);
+    }
+    console.log(this.proj_items)
+
+  }
+
   newLogin = function(){
     // Login New User check - If success 
     ////////////////////
     if (true){
-      console.log("w");
       this.remove_button = !this.remove_button;
       this.if_logout = !this.if_logout;
       this.boolDetailsToggle();
+
+      this.promiseGetUserDetails().subscribe(
+        data => this.setGetUserDetails(data),
+        err => console.log(err)
+      ) 
     }
     // } else {
     //   alert("Login Error! :-(");
     //   this.boolNewToggle();
     //   this.boolLoginToggle();
     // }
+  }
+
+  clearUsernamePass = function (){
+    this.login_username = "";
+    this.login_password = "";
   }
 
   removeLogout = function(){
