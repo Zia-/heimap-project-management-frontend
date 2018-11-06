@@ -117,6 +117,42 @@ export class AppComponent {
     
   // }
 
+  cleanVariables = function (){
+      this.username = "";
+    this.new_username = "";
+    this.new_password = "";
+    this.new_re_password = "";
+    this.auth_key = "";
+    this.proj_name = "";
+    this.organization = "";
+    this.funder = "";
+    this.description = "";
+    this.email = "";
+    this.firstname = "";
+    this.lastname = "";
+    this.user_organisation = "";
+    this.user_about = "";
+    this.user_details_array = [];
+    this.proj_items = [];
+    this.full_name = "";
+    this.invite_username = "";
+    this.invite_role = "";
+    this.proj_id_array = [];
+    this.remove_button = false;
+    this.auth_key_validity = false;
+    this.create_user_validity = false;
+    this.email_email_validity = false;
+    this.email_username_validity = false;
+    this.create_email_validity = false;
+    this.login_user_validity = false;
+    this.if_new = false; 
+    this.if_new_project = false; 
+    this.if_new_user = false; 
+    this.if_new_login = false;
+    this.if_logout = false; 
+    this.if_details = false;
+  }
+
   promiseUserName = function (){
     return this.http.get(this.backend_api+'/get/username/availability?username='+this.username)
   }
@@ -278,6 +314,11 @@ export class AppComponent {
 
     this.invite_username = "";
     this.invite_role = "";
+    
+    this.promiseGetUserDetails().subscribe(
+      data => this.setGetUserDetails(data),
+      err => console.log(err)
+    )
   }
 
   boolSubmitInvite = function(){
@@ -520,7 +561,6 @@ export class AppComponent {
       this.proj_content_single["proj_members"] = this.proj_members;
       this.proj_items.push(this.proj_content_single);
     }
-    console.log(this.proj_items)
 
   }
 

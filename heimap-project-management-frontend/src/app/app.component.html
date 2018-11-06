@@ -1,12 +1,12 @@
 <!-- Project Action  -->
-<button type="button" [disabled]="boolNew()" class="btn btn-primary" [ngClass]="(removeButton())?'button-remove':'button-regain'" style="margin-left:20px;margin-top:20px" (click)="boolNewProjectToggle(); boolNewToggle()">Start A New HeiMAP Project</button>
+<button type="button" [disabled]="boolNew()" class="btn btn-warning" [ngClass]="(removeButton())?'button-remove':'button-regain'" style="margin-left:20px;margin-top:20px" (click)="boolNewProjectToggle(); boolNewToggle()">Start A New HeiMAP Project</button>
 
 <!-- User Interaction  -->
 <button type="button" [disabled]="boolNew()" class="btn btn-primary" [ngClass]="(removeButton())?'button-remove':'button-regain'" style="float:right;margin-right:20px;margin-top:20px" (click)="boolNewUserToggle(); ; boolNewToggle()">Sign Up To HeiMAP</button>
 <br>
 <button type="button" [disabled]="boolNew()" class="btn btn-success" [ngClass]="(removeButton())?'button-remove':'button-regain'" style="float:right;margin-right:20px;margin-top:20px" (click)="boolLoginToggle(); ; boolNewToggle();">Log In</button>
 <br>
-<button type="button" class="btn btn-danger" [ngClass]="(removeLogout())?'button-remove':'button-regain'" style="float:right;margin-right:20px;margin-top:-40px" (click)="logOut();  boolNewToggle(); clearUsernamePass();">Log Out</button>
+<button type="button" class="btn btn-danger" [ngClass]="(removeLogout())?'button-remove':'button-regain'" style="float:right;margin-right:20px;margin-top:-40px" (click)="logOut();  boolNewToggle(); clearUsernamePass(); cleanVariables();">Log Out</button>
 <br>
 
 
@@ -126,7 +126,7 @@
 <div *ngIf="boolDetails()" style="margin-top:30px; margin-left:50px">
   <p style="font-size:30px;">Willkommen <span style="color:red;">{{ full_name }}</span> :D</p>
   
-  <div *ngFor="let proj_single_item of proj_items" style="background-color: #F3FEFF;width:800px;padding:5px;box-shadow: 5px 5px 5px grey;margin-bottom: 30px">
+  <div *ngFor="let proj_single_item of proj_items" style="background-color: #F3FEFF;width:800px;padding:5px;box-shadow: 5px 5px 5px grey;margin-bottom: 200px">
 
     <!-- <p *ngIf="proj_single_item.proj_role_single == 'superuser'" style="font-size:20px;">
       <span style="font-weight: bold;">Project Name: </span><span style="color:blue;">{{ proj_single_item.proj_name_single }}</span>
@@ -157,7 +157,7 @@
       <span style="font-weight: bold;">Role: </span><span style="color:#FF8C00">{{ proj_single_item.proj_role_single }}</span >
     </p>
 
-    <div *ngIf="proj_single_item.proj_role_single == 'superuser'">
+    <div>
       <p style="font-size:20px;font-weight: bold;">Members:</p>
       <ul>
         <li *ngFor="let members of proj_single_item.proj_members">
@@ -166,14 +166,14 @@
       </ul>
     </div>
 
-    <div *ngIf="proj_single_item.proj_role_single != 'superuser'">
+    <!-- <div *ngIf="proj_single_item.proj_role_single != 'superuser'">
       <p style="font-size:20px;font-weight: bold;">Members:</p>
       <ul>
         <li *ngFor="let members of proj_single_item.proj_members">
           {{ members.first_name }} {{ members.last_name }} (username - <span style="color:red;">{{ members.user_name }}</span>) - <span style="color:#FF8C00">{{ members.role_proj }}</span >
         </li>
       </ul>
-    </div>
+    </div> -->
     
 
     <div *ngIf="proj_single_item.proj_role_single == 'superuser'"  style="float:left">
@@ -190,7 +190,7 @@
           <option>Revoke!</option>
         </select>
         &nbsp;
-      <button type="button" class="btn btn-success" [disabled]="boolSubmitInvite()" (click)="inviteUser(proj_single_item.proj_id_single)" >Invite</button> 
+      <button type="button" class="btn btn-success" [disabled]="boolSubmitInvite()" (click)="inviteUser(proj_single_item.proj_id_single)" >Submit</button> 
     </div>
     
   </div>
