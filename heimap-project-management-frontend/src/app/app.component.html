@@ -124,7 +124,7 @@
 
 <!-- List User Details -->
 <div *ngIf="boolDetails()" style="margin-top:30px; margin-left:50px">
-  <p style="font-size:30px;">Willkommen <span style="color:red;">{{ full_name }}</span> :D</p>
+  <p style="font-size:30px;">Willkommen <span style="color:red;">{{ full_name }}</span>, (User Id: {{user_id}}) :D</p>
   
   <div *ngFor="let proj_single_item of proj_items" style="background-color: #F3FEFF;width:800px;padding:5px;box-shadow: 5px 5px 5px grey;margin-bottom: 200px">
 
@@ -150,11 +150,11 @@
     </p> -->
 
     <p style="font-size:20px;">
-      <span style="font-weight: bold;">Project Name: </span><span style="color:blue;">{{ proj_single_item.proj_name_single }}</span>
+      <span style="font-weight: bold;">Project Name: </span><span style="color:blue;">{{ proj_single_item.proj_name_single }}</span>, (Project Id: {{proj_single_item.proj_id_single}})
       <br>
-      <span style="font-weight: bold;"><a href="https://google.com" target="_blank">Go To Maps</a></span>
+      <span style="font-weight: bold;"><a href={{webapp_api}} target="_blank">Go To Maps</a></span>
       <br>
-      <span style="font-weight: bold;">Role: </span><span style="color:#FF8C00">{{ proj_single_item.proj_role_single }}</span >
+      <span style="font-weight: bold;">Role: </span><span style="color:#FF8C00">{{ proj_single_item.proj_role_single }}</span >, (User Id: )
     </p>
 
     <div>

@@ -21,6 +21,7 @@ export class AppComponent {
   // @Input() input_username: String;
   backend_api: String = "http://129.206.7.141:8080";
   // backend_api: String = "http://localhost:8080";
+  webapp_api: String = "http://localhost:8080/webapp/";
   drupal_api: String = "http://localhost:8080";
   username: String = "";
   new_username: String = "";
@@ -39,6 +40,7 @@ export class AppComponent {
   user_details_array: Array<any> = [];
   proj_items: Array<any> = [];
   full_name: String = "";
+  user_id: String = "";
   invite_username: String = "";
   invite_role: String = "";
   proj_id_array: Array<any> = [];
@@ -521,6 +523,7 @@ export class AppComponent {
       if (this.user_details_array[i]["username"] == this.login_username){        
         // Set Full Name of Logged In User
         this.full_name = this.user_details_array[i]["first_name"] + " " + this.user_details_array[i]["last_name"];
+        this.user_id = this.user_details_array[i]["user_id"];
       }
 
       if (this.proj_id_array.indexOf(this.user_details_array[i]["proj_id"]) < 0){
