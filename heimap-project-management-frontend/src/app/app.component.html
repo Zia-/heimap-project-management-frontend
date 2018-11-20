@@ -152,9 +152,25 @@
     <p style="font-size:20px;">
       <span style="font-weight: bold;">Project Name: </span><span style="color:blue;">{{ proj_single_item.proj_name_single }}</span>, (Project Id: {{proj_single_item.proj_id_single}})
       <br>
-      <span style="font-weight: bold;"><a href={{webapp_api}} target="_blank">Go To Maps</a></span>
+      <span style="font-weight: bold;">How to go to the WebApp: </span><span style="color:#FF8C00"></span >
+        <br>
+        1. <a href={{webapp_api}} target="_blank">Click to the Link!</a>
+        <br>
+        2. Go to the newly opened tab.
+        <br>
+        3. Right click somewhere so that you can see the "Inspect Element" or "Inspect" option from the opened dropdown menu.
+        <br>
+        4. Click "Inspect Element" or "Inspect" option, depending upon what you see.
+        <br>
+        5. Locate "Console" tab in the newly opened pane and click it.
+        <br>
+        6. The place you find to enter command under the console tab, copy-paste the following text within the greater/less than symbol <<span style="font-weight: italics;font-size: 15px">sessionStorage.setItem("projId", "{{proj_single_item.proj_id_single}}"); sessionStorage.setItem("userId", "{{user_id}}");</span>>
+        <br>
+        7. Hit Enter and you are good to go :)
       <br>
-      <span style="font-weight: bold;">Role: </span><span style="color:#FF8C00">{{ proj_single_item.proj_role_single }}</span >, (User Id: )
+      <!-- <span style="font-weight: bold;"><a href={{webapp_api}} target="_blank">Go To Maps</a></span> ("sessionStorage.setItem("projId", "{{proj_single_item.proj_id_single}}"); sessionStorage.setItem("userId", "{{user_id}}");") -->
+      <br>
+      <span style="font-weight: bold;">Role: </span><span style="color:#FF8C00">{{ proj_single_item.proj_role_single }}</span >
     </p>
 
     <div>
