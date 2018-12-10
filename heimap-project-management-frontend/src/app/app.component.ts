@@ -21,7 +21,7 @@ export class AppComponent {
   // @Input() input_username: String;
   backend_api: String = "http://129.206.7.141:8080";
   // backend_api: String = "http://localhost:8080";
-  webapp_api: String = "http://localhost:8080/webapp/";
+  webapp_api: String = "http://localhost:8080/webapp/#!/project?";
   drupal_api: String = "http://localhost:8080";
   username: String = "";
   new_username: String = "";
