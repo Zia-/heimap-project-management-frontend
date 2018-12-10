@@ -154,7 +154,7 @@
       <br>
       <span style="font-weight: bold;">How to go to the WebApp: </span><span style="color:#FF8C00"></span >
         <br>
-        1. <a href={{webapp_api}} target="_blank">Click to the Link!</a>
+        1. <a href='{{webapp_api}}userId={{user_id}}&projId={{proj_single_item.proj_id_single}}&role={{proj_single_item.proj_role_single}}' target="_blank">Click to the Link!</a>
         <br>
         2. Go to the newly opened tab.
         <br>
@@ -199,11 +199,11 @@
         &nbsp;
         <label for="exampleFormControlSelect1">Assign Role: </label>
         <select class="form-control" style="width:150px;display: inline" [(ngModel)]="invite_role">
-          <option>Project Admin</option>
-          <option>Project Leader</option>
-          <option>Senior User</option>
-          <option>Guest User</option>
-          <option>Revoke!</option>
+          <option>admin</option>
+          <option>senior</option>
+          <option>user</option>
+          <option>guest</option>
+          <option>revoke!</option>
         </select>
         &nbsp;
       <button type="button" class="btn btn-success" [disabled]="boolSubmitInvite()" (click)="inviteUser(proj_single_item.proj_id_single)" >Submit</button> 
